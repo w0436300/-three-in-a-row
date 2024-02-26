@@ -8,6 +8,7 @@
     "test": "tests"
   },
   "scripts": {
+    "build": "tsc",
     "test": "jest",
     "start": "http-server . -p 8000"
   },
