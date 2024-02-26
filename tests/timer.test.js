@@ -4,11 +4,17 @@ jest.useFakeTimers();
 jest.spyOn(global, 'setInterval');
 
 test('Timer starts and counts correctly', () => {
-  const timer = new Timer();
+
+  const displayElement = { textContent: '' };
+
+  const timer = new Timer(displayElement);
+  
   timer.start();
+  
   expect(setInterval).toHaveBeenCalledTimes(1);
   expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
 
-  jest.advanceTimersByTime(3000); // Simulate 3 seconds passing
+  jest.advanceTimersByTime(3000); 
+  
   expect(timer.getCount()).toBe(3);
 });
