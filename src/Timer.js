@@ -31,6 +31,10 @@ export class Timer {
         this.elapsedTime = 0;
         this.display();
     }
+    
+    getCount() {
+        return this.elapsedTime;
+      }
 
     display() {
         if (this.displayElement) {

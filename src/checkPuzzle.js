@@ -12,16 +12,9 @@
             }
         }
     }
-    // status message
-    let checkPuzzleHTML = '';
-    if (allCorrect && !incomplete) {
-        checkPuzzleHTML = "You did it!!";
-    } else if (!allCorrect) {
-        checkPuzzleHTML = "Something is wrong";
-    } else {
-        checkPuzzleHTML = "So far so good";
-    }
-    document.getElementById('puzzleStatus').innerHTML = checkPuzzleHTML;
+    
+    return { allCorrect, incomplete };
+
 }
 
 

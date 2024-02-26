@@ -1,7 +1,9 @@
 import { getColorFromState } from './src/getColorFromState.js';
 import { checkPuzzle } from './src/checkPuzzle.js';
 import { Timer } from './src/timer.js';
-import { fetchGameData } from './src/fetchFameData.js';
+import { fetchGameData } from './src/fetchGameData.js';
+import { toggleIncorrectSquares } from './src/toggleIncorrectSquares.js';
+
 
 async function Game(){
     // fetch game data from API
@@ -72,30 +74,27 @@ async function Game(){
     
     //Click “Check Puzzle” display: 
     //Check puzzle function
-  
-    document.getElementById('checkPuzzleButton').addEventListener('click', () => checkPuzzle(rows, gridSize));
+    document.getElementById('checkPuzzleButton').addEventListener('click', () => {
+        const { allCorrect, incomplete } = checkPuzzle(rows, gridSize);
+        let checkPuzzleHTML = '';
+        if (allCorrect && !incomplete) {
+            checkPuzzleHTML = "You did it!!";
+        } else if (!allCorrect) {
+            checkPuzzleHTML = "Something is wrong";
+        } else {
+            checkPuzzleHTML = "So far so good";
+        }
+        document.getElementById('puzzleStatus').innerHTML = checkPuzzleHTML;
+    });
+    
+   
     
     // display X on incorrect squares
-    function toggleIncorrectSquares(show) {
-        for (let i = 0; i < gridSize; i++) {
-            for (let j = 0; j < gridSize; j++) {
-                const square = rows[i][j];
-                const td = document.querySelector(`td[square-index="${i * gridSize + j}"]`);
-                
-                if (show && square.currentState !== square.correctState) {
-                    
-                    td.textContent = 'X';
-                } else {
-                 
-                    td.textContent = '';
-                }
-            }
-        }
-    }
+   
     document.getElementById('showIncorrect').addEventListener('click', function() {
-        toggleIncorrectSquares(this.checked);
+        toggleIncorrectSquares(rows, gridSize, this.checked);
     });
-
+    
     //initial timer
     const timerElement = document.getElementById('demo');
     const gameTimer = new Timer(timerElement);
