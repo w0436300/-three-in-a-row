@@ -1,12 +1,14 @@
 import { getColorFromState } from './src/getColorFromState.js';
 import { checkPuzzle } from './src/checkPuzzle.js';
+import { Timer } from './src/timer.js';
+import { fetchGameData } from './src/fetchFameData.js';
 
 async function Game(){
     // fetch game data from API
-    const respond = await fetch('https://prog2700.onrender.com/threeinarow/random');
-    const gameJSON = await respond.json();
+    const gameJSON = await fetchGameData(); 
     const rows = gameJSON.rows
     const gridSize = rows.length;
+
 
    //Displaying a  6 x 6 grid table
     let gridHTML = "<table>";
@@ -28,8 +30,8 @@ async function Game(){
     gridHTML += `<input type="checkbox" id="showIncorrect" /> Show Incorrect Squares<br>`;
     gridHTML += `
     <p id="demo">0</p>
-    <button id="start" onclick="myStartFunction()">Start time</button>
-    <button id="stop" onclick="myStopFunction()">Stop time</button>
+    <button id="start">Start time</button>
+    <button id="stop">Stop time</button>
     
 `
 
@@ -94,23 +96,12 @@ async function Game(){
         toggleIncorrectSquares(this.checked);
     });
 
-    let count = 0;
-    let myInterval;
-    function myTimer() {
-      document.getElementById("demo").innerHTML = count++; 
-    }
+    //initial timer
+    const timerElement = document.getElementById('demo');
+    const gameTimer = new Timer(timerElement);
+    document.getElementById('start').addEventListener('click', () => gameTimer.start());
+    document.getElementById('stop').addEventListener('click', () => gameTimer.stop());
 
-    function myStartFunction() {
-        if(!myInterval){
-        myInterval = setInterval(myTimer, 1000);
-        }
-      }
-    
-    function myStopFunction() {
-      clearInterval(myInterval);
-    }
-    document.getElementById('stop').onclick = myStopFunction; 
-    document.getElementById('start').onclick = myStartFunction; 
 
     document.getElementById('refreshGameButton').addEventListener('click', function() {
         window.location.reload();
@@ -118,5 +109,8 @@ async function Game(){
     
 }
 
-Game();
+document.addEventListener('DOMContentLoaded', () => {
+    Game();
+});
+
 console.log("Start");

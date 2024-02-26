@@ -1,16 +1,21 @@
 export class Timer {
-    constructor() {
-        this.count = 0;
+    constructor(displayElement) {
+        this.elapsedTime = 0;
         this.interval = null;
+        this.displayElement = displayElement;
+        console.log(displayElement); 
     }
 
     start() {
-        if (!this.interval) {
-            this.interval = setInterval(() => {
-                this.count++;
-                console.log(this.count); 
-            }, 1000); 
+        if (this.interval) {
+            return; 
         }
+
+        this.interval = setInterval(() => {
+            this.elapsedTime++;
+            this.display();
+        }, 1000);
+        console.log('Timer started');
     }
 
     stop() {
@@ -18,14 +23,18 @@ export class Timer {
             clearInterval(this.interval);
             this.interval = null;
         }
+        console.log('Timer stopped');
     }
 
     reset() {
-        this.stop(); // Stop any existing timer
-        this.count = 0; // Reset count to 0
+        this.stop();
+        this.elapsedTime = 0;
+        this.display();
     }
 
-    getCount() {
-        return this.count;
+    display() {
+        if (this.displayElement) {
+            this.displayElement.textContent = this.elapsedTime;
+        }
     }
 }
