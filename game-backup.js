@@ -1,12 +1,19 @@
-import { getColorFromState } from './src/getColorFromState.js';
-import { checkPuzzle } from './src/checkPuzzle.js';
-
 async function Game(){
     // fetch game data from API
     const respond = await fetch('https://prog2700.onrender.com/threeinarow/random');
     const gameJSON = await respond.json();
     const rows = gameJSON.rows
     const gridSize = rows.length;
+
+    // function to determine the color based on the current state
+    function getColorFromState(state) {
+        switch (state) {
+            case 0: return '#e47298'; // Empty (State 0)
+            case 1: return '#209e31';  // State 1
+            case 2: return 'white';  // State 2
+            default: return '#e47298';
+        }
+    }
 
    //Displaying a  6 x 6 grid table
     let gridHTML = "<table>";
@@ -70,8 +77,31 @@ async function Game(){
     
     //Click “Check Puzzle” display: 
     //Check puzzle function
-  
-    document.getElementById('checkPuzzleButton').addEventListener('click', () => checkPuzzle(rows, gridSize));
+    function checkPuzzle() {
+        let allCorrect = true;
+        let incomplete = false;
+        for (let i = 0; i < gridSize; i++) {
+            for (let j = 0; j < gridSize; j++) {
+                const square = rows[i][j];
+                if (square.currentState === 0) {
+                    incomplete = true;
+                } else if (square.currentState !== square.correctState) {
+                    allCorrect = false;
+                }
+            }
+        }
+        // status message
+        let checkPuzzleHTML = '';
+        if (allCorrect && incomplete) {
+            checkPuzzleHTML = "So far so good";
+        } else if (allCorrect) {
+            checkPuzzleHTML = "You did it!!";
+        } else {
+            checkPuzzleHTML = "Something is wrong";
+        }
+        document.getElementById('puzzleStatus').innerHTML = checkPuzzleHTML;
+    }
+    document.getElementById('checkPuzzleButton').addEventListener('click', checkPuzzle);
     
     // display X on incorrect squares
     function toggleIncorrectSquares(show) {
