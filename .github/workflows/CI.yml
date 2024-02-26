@@ -17,12 +17,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
 
     - name: Install dependencies
       run: npm install
-    - name: Run tests
+    - name: Run Unit Tests
       run: npm test
+
+    - name: Build and Deploy (Add deployment steps if needed)
+      run: npm run build && npm run deploy
